@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block titulo %}Reservar cita{% endblock %}
+{% block contenido %}
+<div class="hero mb-4">
+  <h1 class="h3 fw-bold mb-1">Reserva tu cita en minutos</h1>
+  <p class="mb-0 text-white-50">Elige el servicio, tu barbero y un horario libre. Sin filas ni mensajes de espera.</p>
+</div>
+
+<form id="formReserva" method="post" action="{{ url_for('reservar') }}" novalidate>
+  <div class="row g-4">
+    <div class="col-lg-8">
+
+      <!-- Paso 1: servicio -->
+      <section class="card paso mb-4">
+        <div class="card-body">
+          <h2 class="h5"><span class="num">1</span> Elige el servicio</h2>
+          <div class="row g-3">
+            {% for s in servicios %}
+            <div class="col-sm-6">
+              <input type="radio" class="btn-check" name="servicio_id" id="serv{{ s.id }}" value="{{ s.id }}"
+                     data-nombre="{{ s.nombre }}" data-precio="{{ '%.2f'|format(s.precio) }}" data-duracion="{{ s.duracion_min }}"
+                     {% if previo.servicio_id == s.id|string %}checked{% endif %} required>
+              <label class="opcion w-100" for="serv{{ s.id }}">
+                <span class="d-flex justify-content-between">
+                  <strong>{{ s.nombre }}</strong><span class="precio">${{ '%.2f'|format(s.precio) }}</span>
+                </span>
+                <small class="text-secondary d-block">{{ s.descripcion }}</small>
+                <small class="text-secondary"><i class="bi bi-clock"></i> {{ s.duracion_min }} min</small>
+              </label>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
+      <!-- Paso 2: barbero -->
+      <section class="card paso mb-4">
+        <div class="card-body">
+          <h2 class="h5"><span class="num">2</span> Elige tu barbero</h2>
+          <div class="row g-3">
+            {% for b in barberos %}
+            <div class="col-sm-4">
+              <input type="radio" class="btn-check" name="barbero_id" id="barb{{ b.id }}" value="{{ b.id }}"
+                     data-nombre="{{ b.nombre }}" {% if previo.barbero_id == b.id|string %}checked{% endif %} required>
+              <label class="opcion w-100 text-center" for="barb{{ b.id }}">
+                <span class="avatar">{{ b.nombre[0] }}</span>
+                <strong class="d-block">{{ b.nombre }}</strong>
+                <small class="text-secondary">{{ b.especialidad }}</small>
+              </label>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
+      <!-- Paso 3: fecha y hora -->
+      <section class="card paso mb-4">
+        <div class="card-body">
+          <h2 class="h5"><span class="num">3</span> Fecha y hora</h2>
+          <div class="row g-3 align-items-end">
+            <div class="col-sm-5">
+              <label for="fecha" class="form-label">Fecha</label>
+              <input type="date" class="form-control" id="fecha" name="fecha" min="{{ fecha_min }}" max="{{ fecha_max }}"
+                     value="{{ previo.fecha or fecha_min }}" required>
+            </div>
+            <div class="col-sm-7">
+              <small class="text-secondary"><i class="bi bi-info-circle"></i> Lunes a viernes 8:00–18:00 · Sábado 8:00–16:00 · Domingo cerrado</small>
+            </div>
+          </div>
+          <input type="hidden" name="hora" id="hora" value="{{ previo.hora or '' }}">
+          <div id="horarios" class="mt-3">
+            <p class="text-secondary mb-0">Elige un servicio y un barbero para ver los horarios libres.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Paso 4: datos -->
+      <section class="card paso mb-4">
+        <div class="card-body">
+          <h2 class="h5"><span class="num">4</span> Tus datos</h2>
+          <div class="row g-3">
+            <div class="col-sm-7">
+              <label for="nombre" class="form-label">Nombre completo</label>
+              <input type="text" class="form-control" id="nombre" name="nombre" maxlength="80"
+                     placeholder="Ej. Juan Pérez" value="{{ previo.nombre or '' }}" required>
+            </div>
+            <div class="col-sm-5">
+              <label for="telefono" class="form-label">Teléfono / WhatsApp</label>
+              <input type="tel" class="form-control" id="telefono" name="telefono" maxlength="9"
+                     placeholder="7123-4567" pattern="[267][0-9]{3}-?[0-9]{4}" value="{{ previo.telefono or '' }}" required>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Resumen -->
+    <div class="col-lg-4">
+      <aside class="card resumen sticky-lg-top">
+        <div class="card-body">
+          <h2 class="h5 mb-3"><i class="bi bi-receipt"></i> Resumen</h2>
+          <dl class="mb-3">
+            <dt>Servicio</dt><dd id="rServicio">—</dd>
+            <dt>Barbero</dt><dd id="rBarbero">—</dd>
+            <dt>Fecha y hora</dt><dd id="rFecha">—</dd>
+            <dt>Total</dt><dd id="rTotal" class="fs-4 fw-bold dorado-oscuro">—</dd>
+          </dl>
+          <div id="errorCliente" class="alert alert-danger py-2 small d-none"></div>
+          <button type="submit" class="btn btn-dorado w-100 btn-lg"><i class="bi bi-check2-circle"></i> Confirmar cita</button>
+          <p class="small text-secondary mt-2 mb-0">El pago se realiza en la barbería.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>const URL_HORARIOS = "{{ url_for('api_horarios') }}";</script>
+<script src="{{ url_for('static', filename='js/reserva.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block titulo %}Cita #{{ cita.id }}{% endblock %}
+{% block contenido %}
+<div class="row justify-content-center">
+  <div class="col-md-7 col-lg-6">
+    <div class="card resumen text-center">
+      <div class="card-body p-4">
+        {% if nueva %}
+          <div class="icono-ok mb-2"><i class="bi bi-check-circle-fill"></i></div>
+          <h1 class="h4 fw-bold">¡Cita reservada!</h1>
+          <p class="text-secondary">Te esperamos. Llega 5 minutos antes de tu hora.</p>
+        {% else %}
+          <h1 class="h4 fw-bold">Cita #{{ cita.id }}</h1>
+        {% endif %}
+        <span class="badge estado-{{ cita.estado|lower }} mb-3">{{ cita.estado }}</span>
+        <table class="table text-start mb-4">
+          <tr><th>N.º de cita</th><td>#{{ cita.id }}</td></tr>
+          <tr><th>Cliente</th><td>{{ cita.cliente_nombre }}</td></tr>
+          <tr><th>Teléfono</th><td>{{ cita.cliente_telefono }}</td></tr>
+          <tr><th>Servicio</th><td>{{ cita.servicio }} ({{ cita.duracion_min }} min)</td></tr>
+          <tr><th>Barbero</th><td>{{ cita.barbero }}</td></tr>
+          <tr><th>Fecha</th><td>{{ cita.fecha|fecha_larga }}</td></tr>
+          <tr><th>Hora</th><td>{{ cita.hora_inicio }} – {{ cita.hora_fin }}</td></tr>
+          <tr><th>Total</th><td class="fw-bold">${{ '%.2f'|format(cita.precio) }}</td></tr>
+        </table>
+        <div class="d-grid gap-2 d-sm-flex justify-content-center">
+          <a class="btn btn-dorado" href="{{ url_for('inicio') }}"><i class="bi bi-plus-lg"></i> Nueva reserva</a>
+          <a class="btn btn-outline-secondary" href="{{ url_for('agenda', fecha=cita.fecha) }}"><i class="bi bi-journal-text"></i> Ver agenda</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

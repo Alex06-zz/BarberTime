@@ -1,0 +1,68 @@
+/* estilos.css — identidad visual de BarberTime */
+:root {
+  --negro: #1c1c1e;
+  --dorado: #c9a24d;
+  --dorado-oscuro: #9a7a2f;
+  --crema: #f7f4ee;
+}
+
+body { background: var(--crema); }
+
+.barra { background: var(--negro); }
+.dorado { color: var(--dorado); }
+.dorado-oscuro { color: var(--dorado-oscuro); }
+
+.hero {
+  background: linear-gradient(135deg, var(--negro), #3a3326);
+  color: #fff;
+  border-radius: 1rem;
+  padding: 1.75rem 2rem;
+}
+
+.card { border: 0; border-radius: 1rem; box-shadow: 0 2px 10px rgba(0, 0, 0, .06); }
+
+.paso h2 { display: flex; align-items: center; gap: .6rem; margin-bottom: 1rem; }
+.num {
+  display: inline-grid; place-items: center;
+  width: 1.8rem; height: 1.8rem; border-radius: 50%;
+  background: var(--negro); color: var(--dorado); font-size: .95rem;
+}
+
+.opcion {
+  display: block; cursor: pointer; height: 100%;
+  border: 2px solid #e6e1d6; border-radius: .8rem; padding: .85rem 1rem;
+  background: #fff; transition: border-color .15s, box-shadow .15s;
+}
+.opcion:hover { border-color: var(--dorado); }
+.btn-check:checked + .opcion { border-color: var(--dorado); box-shadow: 0 0 0 3px rgba(201, 162, 77, .25); }
+.btn-check:focus-visible + .opcion { outline: 2px solid var(--dorado-oscuro); }
+.precio { color: var(--dorado-oscuro); font-weight: 700; }
+
+.avatar {
+  display: inline-grid; place-items: center; margin-bottom: .4rem;
+  width: 3rem; height: 3rem; border-radius: 50%;
+  background: var(--negro); color: var(--dorado); font-weight: 700; font-size: 1.2rem;
+}
+.avatar-sm { width: 2rem; height: 2rem; font-size: .9rem; margin: 0; }
+
+.slot {
+  min-width: 4.6rem; border: 1px solid #d9d2c3; background: #fff; font-variant-numeric: tabular-nums;
+}
+.slot:hover { border-color: var(--dorado); }
+.slot.activo { background: var(--negro); color: var(--dorado); border-color: var(--negro); }
+
+.btn-dorado { background: var(--dorado); color: var(--negro); font-weight: 600; border: 0; }
+.btn-dorado:hover { background: var(--dorado-oscuro); color: #fff; }
+
+.resumen { border-top: 4px solid var(--dorado); top: 1rem; }
+.resumen dt { font-weight: 500; color: #6c757d; font-size: .85rem; }
+.resumen dd { margin-bottom: .6rem; }
+
+.icono-ok { font-size: 3rem; color: #2e9d5b; }
+
+.kpi { border-left: 4px solid var(--dorado); }
+
+.badge.estado-pendiente { background: #f0c75e; color: #3b2f00; }
+.badge.estado-atendida { background: #2e9d5b; }
+.badge.estado-cancelada { background: #adb5bd; }
+.cancelada { opacity: .55; text-decoration: line-through; }

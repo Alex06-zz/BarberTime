@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block titulo %}Agenda{% endblock %}
+{% block contenido %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+  <div>
+    <h1 class="h3 fw-bold mb-0">Agenda del día</h1>
+    <p class="text-secondary mb-0">{{ fecha|fecha_larga }}</p>
+  </div>
+  <form class="d-flex gap-2" method="get">
+    <a class="btn btn-outline-secondary" href="{{ url_for('agenda', fecha=anterior) }}" aria-label="Día anterior"><i class="bi bi-chevron-left"></i></a>
+    <input type="date" class="form-control" name="fecha" value="{{ fecha }}" onchange="this.form.submit()">
+    <a class="btn btn-outline-secondary" href="{{ url_for('agenda', fecha=siguiente) }}" aria-label="Día siguiente"><i class="bi bi-chevron-right"></i></a>
+  </form>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-sm-4"><div class="card kpi"><div class="card-body">
+    <small class="text-secondary">Citas del día</small><div class="fs-3 fw-bold">{{ resumen.total }}</div></div></div></div>
+  <div class="col-sm-4"><div class="card kpi"><div class="card-body">
+    <small class="text-secondary">Atendidas</small><div class="fs-3 fw-bold">{{ resumen.atendidas }}</div></div></div></div>
+  <div class="col-sm-4"><div class="card kpi"><div class="card-body">
+    <small class="text-secondary">Ingreso estimado</small><div class="fs-3 fw-bold">${{ '%.2f'|format(resumen.ingreso_estimado) }}</div></div></div></div>
+</div>
+
+<div class="row g-4">
+  {% for b in barberos %}
+  <div class="col-lg-4">
+    <div class="card h-100">
+      <div class="card-header d-flex align-items-center gap-2">
+        <span class="avatar avatar-sm">{{ b.nombre[0] }}</span><strong>{{ b.nombre }}</strong>
+        <span class="badge text-bg-light ms-auto">{{ por_barbero[b.id]|rejectattr('estado', 'equalto', 'Cancelada')|list|length }} citas</span>
+      </div>
+      <ul class="list-group list-group-flush">
+        {% for c in por_barbero[b.id] %}
+        <li class="list-group-item {% if c.estado == 'Cancelada' %}cancelada{% endif %}">
+          <div class="d-flex justify-content-between">
+            <strong>{{ c.hora_inicio }} – {{ c.hora_fin }}</strong>
+            <span class="badge estado-{{ c.estado|lower }}">{{ c.estado }}</span>
+          </div>
+          <div>{{ c.cliente_nombre }} · <small class="text-secondary">{{ c.cliente_telefono }}</small></div>
+          <small class="text-secondary">{{ c.servicio }} · ${{ '%.2f'|format(c.precio) }}</small>
+          {% if c.estado == 'Pendiente' %}
+          <div class="mt-2 d-flex gap-2">
+            <form method="post" action="{{ url_for('cambiar_estado', cita_id=c.id) }}">
+              <input type="hidden" name="estado" value="Atendida">
+              <input type="hidden" name="volver" value="{{ url_for('agenda', fecha=fecha) }}">
+              <button class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i> Atendida</button>
+            </form>
+            <form method="post" action="{{ url_for('cambiar_estado', cita_id=c.id) }}"
+                  onsubmit="return confirm('¿Cancelar la cita de {{ c.cliente_nombre }}? El horario quedará libre.');">
+              <input type="hidden" name="estado" value="Cancelada">
+              <input type="hidden" name="volver" value="{{ url_for('agenda', fecha=fecha) }}">
+              <button class="btn btn-sm btn-outline-danger"><i class="bi bi-x-lg"></i> Cancelar</button>
+            </form>
+          </div>
+          {% endif %}
+        </li>
+        {% else %}
+        <li class="list-group-item text-secondary">Sin citas este día.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
