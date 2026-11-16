@@ -73,3 +73,12 @@ Python 3 · Flask · SQLite · Jinja2 · Bootstrap 5 · JavaScript
 
 Inicio de sesión para barberos y administrador, gestión de barberos y servicios, recordatorio de
 cita por WhatsApp, cancelación por parte del cliente y reportes de ingresos con gráficas.
+
+## Cómo reservar una cita
+
+1. Entrar a la página principal de BarberTime.
+2. Elegir el servicio (corte, corte + barba, arreglo de barba, etc.); se muestra su precio y duración.
+3. Elegir el barbero que lo atenderá.
+4. Seleccionar la fecha: el sistema muestra solo las horas libres de ese barbero.
+5. Tocar la hora deseada y escribir nombre completo y teléfono (WhatsApp).
+6. Presionar "Confirmar cita". Aparece la confirmación con el número de cita.
