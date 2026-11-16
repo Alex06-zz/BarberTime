@@ -54,6 +54,7 @@ SERVICIOS_INICIALES = [
     ("Arreglo de barba", "Perfilado y arreglo de barba con navaja", 30, 4.00),
     ("Corte infantil", "Corte para niños menores de 12 años", 30, 4.00),
     ("Diseño / líneas", "Corte con diseño o líneas personalizadas", 60, 7.00),
+    ("Tinte o mechas", "Aplicación de tinte o mechas en el cabello", 60, 12.00),
 ]
 
 
